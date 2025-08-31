@@ -37,7 +37,7 @@ curl --location 'http://localhost:8080/api/v1/Currencies?startDate=1999-01-05&en
 
 #### Features Implemented
 * Retrieve Latest Exchange Rates
-* 🛇 Currency Conversion. 
+* 🛇 Currency Conversion (WebAPI Action is missing. Conversion is implemented in [FrankfurterRateProvider](https://github.com/dato0011/currencies-api/blob/master/Currencies/Infrastructure/Implementations/FrankfurterRateProvider.cs#L89)). 
 * ✓ Caching using Redis. Also sets Cache-Control headers for CDN/Proxy caching as well
 * ✓ Retry policies with exponential backoff
 * ✓ Circuit breaker to gracefully handle API outages
