@@ -20,7 +20,7 @@ curl --location 'http://localhost:8080/api/v1/Auth/Login' \
     "Password": "111"
 }'
 ```
-Or you can use user/222 for non-admin account
+Or you can use `user/222` for non-admin account
 
 ### Refresh Access Token
 ```bash
