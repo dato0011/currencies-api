@@ -10,7 +10,7 @@ using Currencies.Repositories;
 using Microsoft.AspNetCore.RateLimiting;
 
 /// <summary>
-/// Controller for handling authentication and JWT token generation
+/// Controller responsible for handling user authentication and JWT token management, including login and token refresh operations.
 /// </summary>
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -23,11 +23,12 @@ public class AuthController : ControllerBase
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Constructor to inject configuration and user repository
+    /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
-    /// <param name="userRepository">An instance of <see cref="IUserRepository"/> repository object</param>
-    /// <param name="jwtTokenFactory">An instance of <see cref="IJwtTokenFactory"/>  Jwt token factory object</param>
-    /// <param name="logger">An instance of <see cref="ILogger"/> logger object</param>
+    /// <param name="userRepository">Repository for accessing and managing user data.</param>
+    /// <param name="jwtTokenFactory">Factory for creating JWT access and refresh tokens.</param>
+    /// <param name="logger">Logger for recording authentication-related events.</param>
+    /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
     public AuthController(IUserRepository userRepository, IJwtTokenFactory jwtTokenFactory, ILogger logger)
     {
         _userRepository = userRepository;
@@ -36,14 +37,19 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Login endpoint to authenticate user and return JWT token
+    /// Authenticates a user and issues JWT access and refresh tokens upon successful login.
     /// </summary>
+    /// <param name="model">The login request containing username and password.</param>
+    /// <returns>An <see cref="ActionResult{T}"/> containing a <see cref="JwtTokenResponseModel"/> with access and refresh tokens, or an error response.</returns>
+    /// <response code="200">Returns the JWT access and refresh tokens upon successful authentication.</response>
+    /// <response code="401">Returned if the username or password is invalid or missing.</response>
     [HttpPost("login")]
     public async Task<ActionResult<JwtTokenResponseModel>> Login([FromBody] LoginRequestModel model)
     {
         // In prod: Validate against DB/auth provider
         if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password)) return Unauthorized();
 
+        // TODO: Thou shall hash the password
         User? user = _userRepository.GetUser(model.Username, model.Password);
         if (user == null)
         {
@@ -77,9 +83,13 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Refresh endpoint to renew JWT token using a valid refresh token.
-    /// This action refreshes both access and refresh tokens and revokes the old ones.
+    /// Refreshes JWT access and refresh tokens using a valid refresh token, revoking the old tokens.
     /// </summary>
+    /// <param name="model">The refresh token request containing the refresh token.</param>
+    /// <returns>An <see cref="ActionResult{T}"/> containing a new <see cref="JwtTokenResponseModel"/> with updated tokens, or an error response.</returns>
+    /// <response code="200">Returns new JWT access and refresh tokens upon successful refresh.</response>
+    /// <response code="400">Returned if the refresh token is missing or invalid.</response>
+    /// <response code="401">Returned if the refresh token is invalid or expired.</response>
     [HttpPost("refresh")]
     public async Task<ActionResult<JwtTokenResponseModel>> Refresh([FromBody] RefreshTokenRequestModel model)
     {

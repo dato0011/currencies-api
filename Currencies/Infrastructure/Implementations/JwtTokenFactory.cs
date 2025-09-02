@@ -8,6 +8,7 @@ using Currencies.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using Currencies.Entities;
 
 /// <summary>
 /// Factory class for creating JWT tokens based on existing claims

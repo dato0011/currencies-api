@@ -2,7 +2,7 @@ namespace Currencies.Infrastructure;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.BearerToken;
+using Currencies.Entities;
 
 /// <summary>
 /// Factory interface for creating JWT tokens based on existing claims

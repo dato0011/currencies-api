@@ -3,7 +3,9 @@ namespace Currencies.Models;
 using System.Text.Json.Serialization;
 
 public record RefreshTokenRequestModel(string RefreshToken);
+
 public record LoginRequestModel(string Username, string Password);
+
 public record JwtTokenResponseModel(
     string AccessToken,
     string RefreshToken,

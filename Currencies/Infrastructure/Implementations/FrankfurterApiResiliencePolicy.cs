@@ -8,11 +8,27 @@ using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 
+/// <summary>
+/// Provides resilience policies for HTTP requests to the Frankfurter API, including retry and circuit breaker strategies.
+/// </summary>
 public class ApiResiliencePolicies : IApiResiliencePolicies
 {
+    /// <summary>
+    /// Gets the retry policy for handling transient HTTP errors and rate-limiting responses.
+    /// </summary>
     public IAsyncPolicy<HttpResponseMessage> RetryPolicy { get; }
+    /// <summary>
+    /// Gets the circuit breaker policy for handling repeated failures in HTTP requests.
+    /// </summary>
     public IAsyncPolicy<HttpResponseMessage> CircuitBreakerPolicy { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiResiliencePolicies"/> class with configured retry and circuit breaker policies.
+    /// </summary>
+    /// <param name="options">Configuration options for the Frankfurter API.</param>
+    /// <param name="logger">Logger for recording policy-related events and errors.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/>, <paramref name="options.Value"/>, or <paramref name="logger"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when retry or circuit breaker configuration values are invalid.</exception>
     public ApiResiliencePolicies(IOptions<FrankfurterApiConfig> options, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(options, nameof(options));
@@ -22,7 +38,7 @@ public class ApiResiliencePolicies : IApiResiliencePolicies
         FrankfurterApiConfig config = options.Value;
 
         if (config.RetryPolicy.RetryCount < 0 || config.RetryPolicy.BaseBackoffSeconds < 0)
-            throw new ArgumentException("Invalid configuration provided " + 
+            throw new ArgumentException("Invalid configuration provided " +
                 $"{nameof(config.RetryPolicy.RetryCount)} and {nameof(config.RetryPolicy.BaseBackoffSeconds)} should be >= 0");
 
         if (config.CircuitBreakerPolicy.BreakDurationMinutes < 1 || config.CircuitBreakerPolicy.FailuresBeforeBreaking < 1)
