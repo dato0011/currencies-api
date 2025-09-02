@@ -20,6 +20,11 @@ public class JwtTokenFactory : IJwtTokenFactory
     private readonly JwtSettings _jwtSettings;
     private readonly ILogger _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JwtTokenFactory"/> class.
+    /// </summary>
+    /// <param name="jwtSettings">The JWT settings configuration.</param>
+    /// <param name="logger">The logger instance.</param>
     public JwtTokenFactory(IOptions<JwtSettings> jwtSettings, ILogger logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

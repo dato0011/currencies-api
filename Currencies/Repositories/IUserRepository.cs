@@ -2,6 +2,9 @@ namespace Currencies.Repositories;
 
 using Currencies.Entities;
 
+/// <summary>
+/// Defines methods for retrieving and managing user authentication and token information.
+/// </summary>
 public interface IUserRepository
 {
     /// <summary>

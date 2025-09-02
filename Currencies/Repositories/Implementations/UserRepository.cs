@@ -8,6 +8,9 @@ using Microsoft.Extensions.Caching.Distributed;
 
 internal record TokenData(string Token, string Username, DateTime Expires);
 
+/// <summary>
+/// Provides methods for managing users and handling authentication tokens.
+/// </summary>
 public class UserRepository : IUserRepository
 {
     private const string RTOKEN = "refresh_token";
@@ -24,6 +27,11 @@ public class UserRepository : IUserRepository
         new User { Id = 2, Username = "user", PasswordHash = "222", Role = "User" }
     ];
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserRepository"/> class with the specified cache and hash algorithm.
+    /// </summary>
+    /// <param name="cache">The distributed cache to use for storing tokens.</param>
+    /// <param name="hash">The hash algorithm to use for token hashing.</param>
     public UserRepository(IDistributedCache cache, HashAlgorithm hash)
     {
         ArgumentNullException.ThrowIfNull(cache);

@@ -16,6 +16,7 @@ using System.Text;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System.Diagnostics;
+using Currencies.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient(Constants.HttpClientThirdPartyApi)
     .AddHttpMessageHandler<CorrelationHandler>();
+builder.Services.AddCustomSwagger();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<FrankfurterApiConfig>(builder.Configuration.GetSection("FrankfurterApi"));
@@ -128,7 +130,6 @@ builder.Services.AddOpenTelemetry()
 
 var app = builder.Build();
 app.UseExceptionMiddleware();
-
 app.UseHttpsRedirection();
 app.UseAccessTokenValidation();
 app.UseAuthentication();
@@ -136,6 +137,12 @@ app.UseAuthorization();
 app.UseRequestLoggingMiddleware();
 app.UseResponseCaching();
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCustomSwagger();
+}
+
 
 try
 {

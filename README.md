@@ -3,6 +3,9 @@
 #### Run The Project
 `docker-compose up -d --build`
 
+#### Swagger Endpoint
+`http://localhost:8080/swagger/index.html`
+
 #### Authenticate
 ```bash
 curl --location 'http://localhost:8080/api/v1/Auth/Login' \

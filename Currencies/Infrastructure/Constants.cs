@@ -23,6 +23,7 @@ public static class Constants
     /// </summary>
     public const string SymbolEUR = "EUR";
 
+    /// <summary>
     /// The name used to create named HttpClient instances from IHttpClientFactory for querying third-party APIs, such as the Frankfurter API.
     /// </summary>
     [Description("Name for creating named HttpClient instances to query third-party APIs like Frankfurter.")]
